@@ -71,5 +71,54 @@ The data at this point looks like
 [First Move "d4"]
 [Second Move "e5"]
 
-It may be time to convert to a database and manipulate from there.
+This is pretty lazy - it changes to "My_Colour", "My_Score" and "Opponent Rating" by running two search and replaces, one each
+for Black and White
+:%s/\[White ".*"\]\n\[Black "Fintan"\]\n\[Result "\_.\{-}-\(.*\)"\]\n\[WhiteElo "\(\d\+\)"\]\n\[BlackElo.*\]/\[My_Colour "Black"\]\r\[My_Score "\1"\]\r\[Opponent_
+Rating "\2"\]/g
+
+:%s/\[White "Fintan"\]\n\[Black ".*"\]\n\[Result "\(.*\)-\_.\{-}"\]\n\[WhiteElo ".*"\]\n\[BlackElo "\(\d\+\)"\]/\[My_Colour "White"\]\r\[My_Score "\1"\]\r\[Opponent_Rating "\2"\]/g
+
+This gets rid of all the games which are not Rated Blitz games
+:%s/\[Event "\(.*Rated Blitz game\)\@!.*"\]\_.\{-}\n\n//g
+
+I notice at this point that some entries have been corrupted - possibly due to format changes in file.
+They are entries not on lines beginning with an opening square bracket, so I delete all of those.
+:%s/^[^\[]\_.\{-}\[/\[/g
+
+It appears I have no non-standard variant games, so I will not delete all Event, Variant, and Date rows.
+(I've decided to ignore the date altogether - my k-factor (the coefficient dictating by how much one's rating changes)
+will not affect opponent rating, my result, or the moves played.
+:%s/\[\(Event\|Date\|Variant\).*\n//g
+
+My data now looks as follows, with games delimited by a blank line
+[My_Colour "Black"]
+[My_Score "0"]
+[Opponent_Rating "1906"]
+[TimeControl "180+0"]
+[First Move "d4"]
+[Second Move "e5"]
+
+Now I strip everything back
+:%s/.*"\(.*\)"\]/\1/g
+
+giving
+
+Black
+0
+1906
+180+0
+d4
+e5
+
+and finally
+:%s/.\zs\n\ze[^\n]/,/g
+:%s/^\n//g
+
+give data of the form:
+
+Black,0,1664,300+3,d4,e5
+Black,0,1712,300+0,e4,d5
+White,0,1698,300+0,e4,c5
+
+Now, it may be time to convert to a database and manipulate from there.
 
