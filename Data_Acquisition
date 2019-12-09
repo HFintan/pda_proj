@@ -1,0 +1,50 @@
+Plan: I have downloaded data from lichess.org on all of my games since joining the site. This is a text file full of entries of the form
+
+[Event "Rated Blitz game"]
+[Site "https://lichess.org/3m1kiAWF"]
+[Date "2019.12.07"]
+[Round "-"]
+[White "hjfree"]
+[Black "Fintan"]
+[Result "1-0"]
+[UTCDate "2019.12.07"]
+[UTCTime "07:39:17"]
+[WhiteElo "1906"]
+[BlackElo "1912"]
+[WhiteRatingDiff "+7"]
+[BlackRatingDiff "-7"]
+[Variant "Standard"]
+[TimeControl "180+0"]
+[ECO "A40"]
+[Termination "Normal"]
+
+1. d4 e5 2. dxe5 Nc6 3. Nf3 Qe7 4. Nc3 Nxe5 5. e3 Nf6 6. Be2 g6 7. O-O Bg7 8. a3 O-O 9. b4 b6 10. Bb2 Bb7 11. Nb5 d6 12. Rc1 Ne4 13. Nd2 Nxd2 14. Qxd2 Qg5 15. f3 Nxf3+ 16. Bxf3 Bxf3 17. Rxf3 Bxb2 18. Rcf1 a6 19. Nxc7 Ra7 20. Nd5 Rc8 21. Nf6+ Kg7 22. Ne4 f5 23. Nxg5 1-0
+
+I will only look at Rated Blitz games, since these are the ones I play most consistently, and comprise the vast majority of my games.
+I will use a vim search and replace to delete all games not of this type. Then I will delete the Event variable from all entries.
+I will also delete the Site variable which links to each game.
+I think I will not keep the date; I do not think time series analysis will yield much information, as my rating has not really changed much overall during the years I have been on the site. I might ignore some first selection of games - during the initial period after registration, the rating change coefficient is much larger, as the algorithm works its way to the correct rating approximation.
+I will remove the Round variable, as most of my games were not played in Tournaments. 
+I will not keep the list of names, but I will introduce a My_Colour variable.
+I will keep the result, but will change it to reflect My_Score as opposed to having it written by colour.
+I will remove the UTCDate and Time.
+I will preserve my opponents Elo but not my own.
+I will remove the RatingDiffs.
+I will remove any entries that are not of a Standard variant, and then delete this variable. 
+I might remove the TimeControl. I think the only Blitz variants I play are 180+0 or 120+1... I guess it could be interesting to compare those, maybe. (120 is the number of seconds per game, 1 is the extra time increment a player gets after every move).
+I will remove the ECO (the opening name), but I will, I think, keep the first couple of moves. Theoretically, there are 400 possible combinations, but in reality, I expect there to be far fewer.
+I will remove the Termination variable. 
+
+This leaves, I think, the following main variables:
+Variables:
+My_Score (Three options: 0,1,0.5).
+My_Colour (Two options: Black, White).
+Opponent_Rating (Probably a range of under 2000).
+Opening (I don't know. Max 400, Realistically, probably about 30).
+Possibly Time_Control (I think "180+0" and "120+1" are the only options).
+
+When it comes to simulating my own data, we shall see what happens, but at least this analysis is more interesting to me than picking some widget factory production costs. 
+
+I will keep a list here of the vim search and replace commands that I use to edit the data down into its final form before I can use it as my database.
+
+
