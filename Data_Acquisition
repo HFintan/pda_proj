@@ -47,4 +47,29 @@ When it comes to simulating my own data, we shall see what happens, but at least
 
 I will keep a list here of the vim search and replace commands that I use to edit the data down into its final form before I can use it as my database.
 
+Remove all Site entries
+:%s/\n\[Site.*$//g
+
+Remove all Round, UTC, Diff, ECO, Termination entries
+:%s/\n\[\(Round\|UTC\|.*Diff\|ECO\|Termination\).*$//g
+
+Remove all but the first two moves of the games, and we'll split those in twain
+:%s/\n1\. \(.*\) \(.*\) 2\..*\n/\[First Move "\1"\]\r\[Second Move "\2"\]/g
+
+I have here split the first two moves into separate variables. I may in time come to regret this and revert. Perhaps I can use it to predict my or my opponents' responses.. who knows...
+
+The data at this point looks like
+[Event "Rated Blitz game"]
+[Date "2019.12.07"]
+[White "hjfree"]
+[Black "Fintan"]
+[Result "1-0"]
+[WhiteElo "1906"]
+[BlackElo "1912"]
+[Variant "Standard"]
+[TimeControl "180+0"]
+[First Move "d4"]
+[Second Move "e5"]
+
+It may be time to convert to a database and manipulate from there.
 
